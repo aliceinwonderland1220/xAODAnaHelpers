@@ -72,8 +72,10 @@ int xAH::Algorithm::isMC(){
     return -1;
   }
 
+  m_isMC = (static_cast<uint32_t>(eventType(*ei)) & xAOD::EventInfo::IS_SIMULATION);
+
   // reached here, return 0 or 1 since we have all we need
-  return (static_cast<uint32_t>(eventType(*ei)) & xAOD::EventInfo::IS_SIMULATION);
+  return m_isMC;
 }
 
 void xAH::Algorithm::registerInstance(){
