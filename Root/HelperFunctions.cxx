@@ -47,7 +47,8 @@ int HelperFunctions::countPrimaryVertices(const xAOD::VertexContainer* vertexCon
 
 int HelperFunctions::getPrimaryVertexLocation(const xAOD::VertexContainer* vertexContainer, MsgStream& msg)
 {
-  msg.setName(msg.name()+".getPrimaryVertexLocation");
+  std::string funcName{"in getPrimaryVertexLocation(): "};
+  
   int location(0);
   for( auto vtx_itr : *vertexContainer )
   {
@@ -56,7 +57,7 @@ int HelperFunctions::getPrimaryVertexLocation(const xAOD::VertexContainer* verte
     }
     location++;
   }
-  msg << MSG::WARNING << "No primary vertex location was found! Returning -1" << endmsg;
+  msg << MSG::WARNING << funcName << "No primary vertex location was found! Returning -1" << endmsg;
   return -1;
 }
 
@@ -322,7 +323,7 @@ TLorentzVector HelperFunctions::jetTrimming(
 
 const xAOD::Vertex* HelperFunctions::getPrimaryVertex(const xAOD::VertexContainer* vertexContainer, MsgStream& msg)
 {
-  msg.setName(msg.name()+".getPrimaryVertex");
+  std::string funcName{"in getPrimaryVertex(): "};
 
   // vertex types are listed on L328 of
   // https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTracking/trunk/xAODTracking/TrackingPrimitives.h
@@ -332,7 +333,7 @@ const xAOD::Vertex* HelperFunctions::getPrimaryVertex(const xAOD::VertexContaine
     return vtx_itr;
   }
 
-  msg << MSG::WARNING << "No primary vertex was found! Returning nullptr" << endmsg;
+  msg << MSG::WARNING << funcName << "No primary vertex was found! Returning nullptr" << endmsg;
 
   return 0;
 }
@@ -356,7 +357,7 @@ bool HelperFunctions::sort_pt(xAOD::IParticle* partA, xAOD::IParticle* partB){
 // prune down to 1 systematic if only request that one.  It does however include the
 // nominal case as a null SystematicSet
 std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP::SystematicSet inSysts, std::string systNames, float systVal, MsgStream& msg ) {
-  msg.setName(msg.name()+".getListofSystematics");
+  std::string funcName{"in getListofSystematics(): "};
 
   std::vector< CP::SystematicSet > outSystList;
 
@@ -368,16 +369,16 @@ std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP:
     systNamesList.push_back(token);
   }
 
-  msg << MSG::DEBUG << "systNames: " << endmsg;
+  msg << MSG::DEBUG << funcName << "systNames: " << endmsg;
   for ( const std::string &name : systNamesList ) {
-    msg << MSG::DEBUG << "\t" << name << endmsg;
+    msg << MSG::DEBUG << funcName << "\t" << name << endmsg;
   }
 
   // loop over input set
   //
   for ( const auto syst : inSysts ) {
 
-    msg << MSG::DEBUG << syst.name() << endmsg;
+    msg << MSG::DEBUG << funcName << syst.name() << endmsg;
 
     // 1.
     // input systName does not contain "All":
@@ -397,7 +398,7 @@ std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP:
       // continue if not matched
       if ( !valid ) continue;
 
-      msg << MSG::DEBUG << "Found match! Adding systematic " << syst.name() << endmsg;
+      msg << MSG::DEBUG << funcName << "Found match! Adding systematic " << syst.name() << endmsg;
 
       // continuous systematics - can choose at what sigma to evaluate
       //
@@ -406,7 +407,7 @@ std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP:
         outSystList.push_back(CP::SystematicSet());
 
         if ( systVal == 0 ) {
-          msg << MSG::ERROR << "Setting continuous systematic to 0 is nominal! Please check!" << endmsg;
+          msg << MSG::ERROR << funcName << "Setting continuous systematic to 0 is nominal! Please check!" << endmsg;
           RCU_THROW_MSG("Failure");
         }
 
@@ -426,7 +427,7 @@ std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP:
     //
     else if ( systNames.find("All") != std::string::npos ) {
 
-      msg << MSG::DEBUG << "Adding systematic " << syst.name() << endmsg;
+      msg << MSG::DEBUG << funcName << "Adding systematic " << syst.name() << endmsg;
 
       // continuous systematics - can choose at what sigma to evaluate
       // add +1 and -1 for when running all
@@ -434,7 +435,7 @@ std::vector< CP::SystematicSet > HelperFunctions::getListofSystematics(const CP:
       if ( syst == CP::SystematicVariation (syst.basename(), CP::SystematicVariation::CONTINUOUS) ) {
 
       if ( systVal == 0 ) {
-        msg << MSG::ERROR << "Setting continuous systematic to 0 is nominal! Please check!" << endmsg;
+        msg << MSG::ERROR << funcName << "Setting continuous systematic to 0 is nominal! Please check!" << endmsg;
         RCU_THROW_MSG("Failure");
       }
 
@@ -519,7 +520,7 @@ std::size_t HelperFunctions::string_pos( const std::string& inputstr, const char
 
 std::string HelperFunctions::parse_wp( const std::string& type, const std::string& config_name, MsgStream& msg )
 {
-  msg.setName(msg.name()+".parse_wp");
+  std::string funcName{"in parse_wp(): "};
 
   std::string wp("");
 
@@ -561,7 +562,7 @@ std::string HelperFunctions::parse_wp( const std::string& type, const std::strin
 
   } else {
 
-    msg << MSG::WARNING << "WP type can be either 'ISO' or 'ID'. Please check passed parameters of this function. Returning empty WP." << endmsg;
+    msg << MSG::WARNING << funcName << "WP type can be either 'ISO' or 'ID'. Please check passed parameters of this function. Returning empty WP." << endmsg;
     return wp;
 
   }
